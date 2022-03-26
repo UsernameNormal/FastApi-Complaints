@@ -1,5 +1,6 @@
 from schemas.base import UserBase
 
+
 class UserRegisterIn(UserBase):
 
     password: str
@@ -7,6 +8,7 @@ class UserRegisterIn(UserBase):
     first_name: str
     last_name: str
     iban: str
+
 
 class UserLogIn(UserBase):
 

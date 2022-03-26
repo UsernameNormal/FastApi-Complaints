@@ -1,6 +1,7 @@
 from schemas.base import UserBase
 from models.enums import RoleType
 
+
 class UserOut(UserBase):
 
     id: int

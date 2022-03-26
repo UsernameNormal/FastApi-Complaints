@@ -1,5 +1,6 @@
 import enum
 
+
 class RoleType(enum.Enum):
 
     approver = "approver"
@@ -9,7 +10,6 @@ class RoleType(enum.Enum):
 
 class State(enum.Enum):
 
-    pending = 'pending'
-    approved = 'approved'
-    rejected = 'rejected'
-    
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"

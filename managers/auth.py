@@ -9,33 +9,37 @@ from models.enums import RoleType
 from models.user import users
 import jwt
 
-class AuthManager:
 
+class AuthManager:
     @staticmethod
     def encode_token(user):
 
-        try: 
+        try:
             payload = {
-                "sub" : user["id"],
-                "exp": datetime.utcnow() + timedelta(minutes = 120)
+                "sub": user["id"],
+                "exp": datetime.utcnow() + timedelta(minutes=120),
             }
 
-            return jwt.encode(payload, config("SECRET_KEY"), algorithm = 'HS256')
-        
+            return jwt.encode(payload, config("SECRET_KEY"), algorithm="HS256")
+
         except Exception as ex:
 
             raise ex
 
-class CustomHTTPBearer(HTTPBearer):
 
+class CustomHTTPBearer(HTTPBearer):
     async def __call__(
         self, request: Request
     ) -> Optional[HTTPAuthorizationCredentials]:
         res = await super().__call__(request)
 
         try:
-            payload = jwt.decode(res.credentials, config("SECRET_KEY"), algorithms = ["HS256"])
-            user_data = await database.fetch_one(users.select().where(users.c.id == payload["sub"]))
+            payload = jwt.decode(
+                res.credentials, config("SECRET_KEY"), algorithms=["HS256"]
+            )
+            user_data = await database.fetch_one(
+                users.select().where(users.c.id == payload["sub"])
+            )
             request.state.user = user_data
 
             return user_data
@@ -43,12 +47,13 @@ class CustomHTTPBearer(HTTPBearer):
         except jwt.ExpiredSignatureError:
 
             raise HTTPException(401, "Token is expired")
-        
+
         except jwt.InvalidTokenError:
             raise HTTPException(401, "Invalid Token")
 
 
 oauth2_scheme = CustomHTTPBearer()
+
 
 def is_complainer(request: Request):
     if not request.state.user["role"] == RoleType.complainer:

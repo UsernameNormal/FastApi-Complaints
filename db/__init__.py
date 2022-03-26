@@ -1,1 +1,1 @@
-from db.config import  *
+from db.config import *
